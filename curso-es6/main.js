@@ -40,14 +40,14 @@ MinhaList.mostraUsuario();
 // Funções do ES6
 const arr = [1, 3, 4, 5, 8, 9];
 
-// Função map -
+// Função map - percorre o vetor para retornar uma nova informação
 const newArr = arr.map(function(item, index) {
   return item + index;
 });
 
 console.log(newArr);
 
-// Função reduce -
+// Função reduce - forma de consumir o vetor e transformar em uma unica informação (geralmente um numero)
 const sum = arr.reduce(function(total, next) {
   return total + next;
 });
@@ -67,3 +67,48 @@ const find = arr.find(function() {
 });
 
 console.log(find);
+
+// Arrows functions
+const newArr = arr.map(item => item + 2);
+
+const teste = () => {
+  return "teste";
+};
+
+// funciona
+const teste = () => [1, 2, 3];
+
+// não funciona
+const teste = () => {
+  nome: "Natan";
+};
+
+// funciona com objeto
+const teste = () => ({ nome: "Natan" });
+
+console.log("teste");
+
+// Definindo Valores padrão
+const soma = (a = 3, b = 6) => a + b;
+
+console.log(soma(1));
+console.log(soma());
+
+// Desestruturação de objetos
+const usuario = {
+  nome: "Natanael",
+  idade: 35,
+  endereco: {
+    cidade: "Gama",
+    estado: "DF"
+  }
+};
+
+const { nome, idade } = usuario;
+
+function mostraNome({ nome }) {
+  console.log(nome);
+}
+
+mostraNome(usuario);
+console.log(nome, idade);
