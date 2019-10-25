@@ -1,166 +1,73 @@
-// const = constante o valor não pode ser reatribuido
-// let = o valor pode ser reatribuido
+import api from "./api";
 
-// A mutação pode acontecer numa constante, voce muda o valor da constante atraves do objeto.
-// const usuario = { nome: "Natanael" };
-// usuario.nome = "Diego";
-// console.log(usuario);
+class App {
+  constructor() {
+    this.repositories = [];
 
-// import { FazSoma } from "./funcoes";
+    this.formEl = document.getElementById("repo-form");
+    this.inputEl = document.querySelector("input[name=repository]");
+    this.listEl = document.getElementById("repo-list");
 
-// console.log(FazSoma(5, 5));
+    this.registerHandlers();
+  }
 
-alert("sdfasd");
+  registerHandlers() {
+    this.formEl.onsubmit = event => this.addRepository(event);
+  }
 
-// Classes
-// class List {
-//   constructor() {
-//     this.data = [];
-//   }
+  async addRepository(event) {
+    event.preventDefault();
 
-//   add(data) {
-//     this.data.push(data);
-//     console.log("Resultado: ", this.data);
-//   }
-// }
+    const repoInput = this.inputEl.value;
 
-// class TodoList extends List {
-//   constructor() {
-//     super();
-//     this.usuario = "Diego";
-//   }
+    if (repoInput.length === 0) return;
 
-//   mostraUsuario() {
-//     console.log(this.usuario);
-//   }
-// }
+    const response = await api.get(`/repos/${repoInput}`);
 
-// var MinhaList = new TodoList();
+    const {
+      name,
+      description,
+      html_url,
+      owner: { avatar_url }
+    } = response.data;
 
-// document.getElementById("novotodo").onclick = function() {
-//   MinhaList.add("Novo todo");
-// };
+    this.repositories.push({
+      name,
+      description,
+      avatar_url,
+      html_url
+    });
 
-// MinhaList.mostraUsuario();
+    console.log(this.repositories);
+    this.render();
+  }
 
-// // Funções do ES6
-// const arr = [1, 3, 4, 5, 8, 9];
+  render() {
+    this.listEl.innerHTML = "";
 
-// // Função map - percorre o vetor para retornar uma nova informação
-// const newArr = arr.map(function(item, index) {
-//   return item + index;
-// });
+    this.repositories.forEach(repo => {
+      let imgEl = document.createElement("img");
+      imgEl.setAttribute("src", repo.avatar_url);
 
-// console.log(newArr);
+      let titleEl = document.createElement("strong");
+      titleEl.appendChild(document.createTextNode(repo.name));
 
-// // Função reduce - forma de consumir o vetor e transformar em uma unica informação (geralmente um numero)
-// const sum = arr.reduce(function(total, next) {
-//   return total + next;
-// });
+      let descriptionEl = document.createElement("p");
+      descriptionEl.appendChild(document.createTextNode(repo.description));
 
-// console.log(sum);
+      let linkEl = document.createElement("a");
+      linkEl.setAttribute("target", "_blank");
+      linkEl.setAttribute("href", repo.html_url);
+      linkEl.appendChild(document.createTextNode("Acessar"));
 
-// // Função filter - usada para filtrar o array
-// const filter = arr.filter(function() {
-//   return item % 2 === 0;
-// });
+      let listItemEl = document.createElement("li");
+      listItemEl.appendChild(imgEl);
+      listItemEl.appendChild(titleEl);
+      listItemEl.appendChild(descriptionEl);
+      listItemEl.appendChild(linkEl);
+      this.listEl.appendChild(listItemEl);
+    });
+  }
+}
 
-// console.log(filter);
-
-// // Find - verificar se existe a informação dentro do array
-// const find = arr.find(function() {
-//   return item === 4;
-// });
-
-// console.log(find);
-
-// // Arrows functions
-// const newArr1 = arr.map(item => item + 2);
-
-// const teste = () => {
-//   return "teste";
-// };
-
-// // funciona
-// const teste1 = () => [1, 2, 3];
-
-// // não funciona
-// const teste2 = () => {
-//   nome: "Natan";
-// };
-
-// // funciona com objeto
-// const teste3 = () => ({ nome: "Natan" });
-
-// console.log("teste");
-
-// // Definindo Valores padrão
-// const soma = (a = 3, b = 6) => a + b;
-
-// console.log(soma(1));
-// console.log(soma());
-
-// // Desestruturação de objetos
-// const usuario = {
-//   nome: "Natanael",
-//   idade: 35,
-//   endereco: {
-//     cidade: "Gama",
-//     estado: "DF"
-//   }
-// };
-
-// const { nome, idade } = usuario;
-
-// function mostraNome({ nome }) {
-//   console.log(nome);
-// }
-
-// mostraNome(usuario);
-// console.log(nome, idade);
-
-// // Operadores rest/spread
-// // utiliza os tres pontos um ao lado do outro
-
-// // REST - pega o resto de uma desetruturação ou de uma passagem de paramentros
-// function somaRest(a, b, ...params) {
-//   return params;
-// }
-
-// console.log(somaRest(1, 3, 4, 4, 5, 6, 7));
-
-// // SPREAD - propaga ou repassa as informções de um array para um outra array
-
-// // Unir arrays
-// const arr1 = [1, 2, 3];
-// const arr2 = [4, 5, 6];
-
-// const arr3 = [...arr1, ...arr2];
-
-// console.log(arr3);
-
-// // Trocar um valor de variavel
-// const usuario1 = {
-//   nome: "Natan",
-//   idade: 35,
-//   empresa: "WebSystem Infor"
-// };
-
-// const usuario2 = { ...usuario1, nome: "Gabriel" };
-
-// console.log(usuario2);
-
-// // Template literals - incluir variaveis dentro de strings
-// const nome1 = "Natan";
-// const idade1 = 35;
-
-// console.log(`Meu nome é ${nome1} e tenho ${idade1} anos.`);
-
-// // Object Short Syntax
-// const usuario10 = {
-//   nome,
-//   idade,
-//   empresa: "WebSystem Infor"
-// };
-
-// console.log(usuario);
+new App();
