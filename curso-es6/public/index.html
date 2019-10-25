@@ -13,14 +13,16 @@
       }
       ul {
         list-style: none;
-        margin: 0;
         padding: 0;
         font-family: sans-serif;
+        margin: 10px 365px 15px 365px;
+        text-align: left;
       }
 
       li {
         clear: both;
-        margin-top: 20px;
+        margin-top: 18px;
+        margin-bottom: 5px;
       }
 
       img {
@@ -58,6 +60,14 @@
         font-family: sans-serif;
         font-size: 14px;
       }
+
+      .exibi-resultados-hidden {
+        display: none;
+      }
+
+      .exibi-resultados {
+        display: block;
+      }
     </style>
   </head>
   <body>
@@ -69,10 +79,14 @@
           name="repository"
           placeholder="Adicionar o caminho para um repositorio github. Ex: sstur/react-rte"
         />
-
         <button type="submit">Adicionar</button>
       </form>
-      <ul id="repo-list"></ul>
+      <div style="text-align: center;">
+        <h2 id="titulo-resultado" class="exibi-resultados-hidden">
+          Resultados encontrados:
+        </h2>
+        <ul id="repo-list"></ul>
+      </div>
     </div>
     <script src="./bundle.js"></script>
   </body>

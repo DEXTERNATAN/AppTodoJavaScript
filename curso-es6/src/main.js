@@ -7,6 +7,7 @@ class App {
     this.formEl = document.getElementById("repo-form");
     this.inputEl = document.querySelector("input[name=repository]");
     this.listEl = document.getElementById("repo-list");
+    this.divResults = document.querySelector("#titulo-resultado");
 
     this.registerHandlers();
   }
@@ -22,28 +23,37 @@ class App {
 
     if (repoInput.length === 0) return;
 
-    const response = await api.get(`/repos/${repoInput}`);
+    this.setLoading();
 
-    const {
-      name,
-      description,
-      html_url,
-      owner: { avatar_url }
-    } = response.data;
+    try {
+      const response = await api.get(`/repos/${repoInput}`);
 
-    this.repositories.push({
-      name,
-      description,
-      avatar_url,
-      html_url
-    });
+      const {
+        name,
+        description,
+        html_url,
+        owner: { avatar_url }
+      } = response.data;
 
-    console.log(this.repositories);
-    this.render();
+      this.repositories.push({
+        name,
+        description,
+        avatar_url,
+        html_url
+      });
+
+      this.inputEl.value = "";
+      this.render();
+    } catch (err) {
+      alert("O repositório não existe!");
+    }
+
+    this.setLoading(false);
   }
 
   render() {
     this.listEl.innerHTML = "";
+    this.divResults.classList.add("exibi-resultados");
 
     this.repositories.forEach(repo => {
       let imgEl = document.createElement("img");
@@ -67,6 +77,18 @@ class App {
       listItemEl.appendChild(linkEl);
       this.listEl.appendChild(listItemEl);
     });
+  }
+
+  setLoading(loading = true) {
+    if (loading === true) {
+      let loadingEl = document.createElement("span");
+      loadingEl.appendChild(document.createTextNode("Carregando"));
+      loadingEl.setAttribute("id", "loading");
+
+      this.formEl.appendChild(loadingEl);
+    } else {
+      document.getElementById("loading").remove();
+    }
   }
 }
 
